@@ -110,7 +110,7 @@
       <AdditionalIncludeDirectories>D:\SDKs\SDL2-2.0.10\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\SDKs\SDL2-2.0.10\lib\x64</AdditionalLibraryDirectories>

@@ -4,14 +4,16 @@
 
 int main(int argc, char* argv[])
 {
-    FireEffect fireEffect;
-    while (!fireEffect.IsOver())
+    FireEffect *pfireEffect = new FireEffect();
+    while (!pfireEffect->IsOver())
     {
-        fireEffect.ProcessInput();
-        fireEffect.Update();
-        fireEffect.Render();
-        fireEffect.Delay();
+        pfireEffect->ProcessInput();
+        pfireEffect->Update();
+        pfireEffect->Render();
+        pfireEffect->Delay();
     }
+
+    delete pfireEffect;
 
     return 0;
 }

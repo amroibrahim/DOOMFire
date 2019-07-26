@@ -11,13 +11,20 @@ FireEffect::FireEffect()
     m_iBufferWidth = iWidth;
     m_iBufferHight = iHeight;
 
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         std::cout << "SDL failed to initialize! SDL_Error: " << SDL_GetError() << std::endl;
     }
 
-    SDL_CreateWindowAndRenderer(m_iBufferWidth, m_iBufferHight, SDL_WINDOW_OPENGL, &m_pWindow, &m_pRenderer);
-    SDL_SetWindowTitle(m_pWindow, "DOOM Fire Effect");
+    m_pWindow = SDL_CreateWindow("DOOM Fire Effect", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_iBufferWidth, m_iBufferHight, SDL_WINDOW_SHOWN);
+    
+    if (m_pWindow)
+    {
+        m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
+    }
+    
+    //SDL_CreateWindowAndRenderer(m_iBufferWidth, m_iBufferHight, SDL_WINDOW_OPENGL, &m_pWindow, &m_pRenderer);
+    //SDL_SetWindowTitle(m_pWindow, );
 
     InitColorVec();
 
@@ -92,6 +99,9 @@ void FireEffect::ProcessInput()
         {
         case SDL_QUIT:
             Quit();
+            break;
+
+        default:
             break;
         }
     }
