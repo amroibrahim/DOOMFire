@@ -18,17 +18,17 @@ m_FrameBuffer[y - 1][x] = m_FrameBuffer[y][x] - (RandomeNumber & 1);
 
 and in original Fabiens javascript
 
-``` js
+```
  function spreadFire(src) {
     var rand = Math.round(Math.random() * 3.0) & 3;
     firePixels[src - FIRE_WIDTH ] = firePixels[src] - (rand & 1);
  }
 ```
-Why in the world would he chose a random number between 0 and 2  ``` js Math.random() * 3.0 ``` then he forces it to be either 0 or 1 ``` js 
+Why in the world would he chose a random number between 0 and 2  ``` Math.random() * 3.0 ``` then he forces it to be either 0 or 1 ``` 
 (rand & 1) ``` ?
 
 The answer is Probability! 
 The code want to give the probability 1/3 to go and look and the below line.
 
 If we have 0 to 2 as random number in binary (00, 01, 10), you can notice that 1 in the least significant bit is accruing 1/3 time. 
-The ``` js rand & 1 ``` is to mask it out.  
+The ``` rand & 1 ``` is to mask it out.  
