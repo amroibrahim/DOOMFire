@@ -83,11 +83,17 @@ void FireEffect::InitColorVec()
     m_ColorVec.push_back({ 0xFF, 0xFF, 0xFF });
 }
 
-FireEffect::~FireEffect()
+void FireEffect::Clean() 
 {
     SDL_DestroyRenderer(m_pRenderer);
     SDL_DestroyWindow(m_pWindow);
     SDL_Quit();
+}
+
+FireEffect::~FireEffect()
+{
+    m_pRenderer = nullptr;
+    m_pWindow = nullptr;
 }
 
 void FireEffect::ProcessInput()

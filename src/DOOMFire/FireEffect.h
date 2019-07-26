@@ -14,10 +14,10 @@ public:
     void Update();
     void Delay();
     void Quit();
+    void Clean();
 
     bool IsOver();
     int GetTimePerFrame();
-
 
 protected:
     virtual void Render(SDL_Renderer* pRenderer);

@@ -13,6 +13,8 @@ int main(int argc, char* argv[])
         pfireEffect->Delay();
     }
 
+    pfireEffect->Clean();
+
     delete pfireEffect;
 
     return 0;
