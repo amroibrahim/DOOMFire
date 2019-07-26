@@ -30,5 +30,5 @@ Why in the world would he chose a random number between 0 and 2  ``` Math.random
 The answer is Probability! 
 The code want to give the probability 1/3 to go and look and the below line.
 
-If we have 0 to 2 as random number in binary (00, 01, 10), you can notice that 1 in the least significant bit is accruing 1/3 time. 
+If we have 0 to 2 as random number in binary (00, 01, 10), you can notice that 1 in the least significant bit is accruing 1/3 times. 
 The ``` rand & 1 ``` is to mask it out.  
