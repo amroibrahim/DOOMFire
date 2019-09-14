@@ -1,7 +1,11 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include <SDL.h>
+
+#define iWidth 320 * 2
+#define iHeight 200 * 2
+#define iTimePerFrame 1000/60 
 
 class FireEffect
 {
@@ -23,8 +27,8 @@ protected:
     virtual void Render(SDL_Renderer* pRenderer);
     virtual void InitColorVec();
 
-    std::vector<std::vector<int>> m_FrameBuffer;
-    std::vector<SDL_Color> m_ColorVec;
+    std::array<std::array<int, iWidth>, iHeight> m_FrameBuffer;
+    std::array<SDL_Color, 37> m_ColorVec;
 
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
