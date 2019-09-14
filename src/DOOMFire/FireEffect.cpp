@@ -145,9 +145,8 @@ void FireEffect::Render(SDL_Renderer* pRenderer)
         {
             if (m_FrameBuffer[y][x])
             {
-                SDL_Color c = m_ColorVec[m_FrameBuffer[y][x]];
-                SDL_SetRenderDrawColor(pRenderer, c.r, c.g, c.b, 0xff);
-               // SDL_RenderDrawPoint(pRenderer, x, y);
+                SDL_SetRenderDrawColor(pRenderer, m_ColorVec[m_FrameBuffer[y][x]].r, m_ColorVec[m_FrameBuffer[y][x]].g, m_ColorVec[m_FrameBuffer[y][x]].b, 0xff);
+                SDL_RenderDrawPoint(pRenderer, x, y);
             }
         }
     }
