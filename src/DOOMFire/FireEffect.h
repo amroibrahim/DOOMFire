@@ -5,6 +5,7 @@
 
 #define iWidth 320 * 2
 #define iHeight 200 * 2
+#define iColorCount 39
 #define iTimePerFrame 1000/60 
 
 class FireEffect
@@ -25,10 +26,10 @@ public:
 
 protected:
     virtual void Render(SDL_Renderer* pRenderer);
-    virtual void InitColorVec();
+    virtual void InitColorLookup();
 
-    std::array<std::array<int, iWidth>, iHeight> m_FrameBuffer;
-    std::array<SDL_Color, 38> m_ColorLookup;
+    int **m_pFrameBuffer;
+    SDL_Color* m_pColorLookup;
 
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
