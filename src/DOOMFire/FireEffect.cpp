@@ -24,49 +24,51 @@ FireEffect::FireEffect()
 
     for (int i = 0; i < m_iBufferWidth; ++i)
     {
-        m_FrameBuffer[m_iBufferHight - 1][i] = m_ColorVec.size() - 1;
+        m_FrameBuffer[m_iBufferHight - 1][i] = m_ColorLookup.size() - 1;
     }
 }
 
 void FireEffect::InitColorVec()
 {
-    m_ColorVec[0] = { 0x07, 0x07, 0x07 };
-    m_ColorVec[1] = { 0x1F, 0x07, 0x07 };
-    m_ColorVec[2] = { 0x2F, 0x0F, 0x07 };
-    m_ColorVec[3] = { 0x47, 0x0F, 0x07 };
-    m_ColorVec[4] = { 0x57, 0x17, 0x07 };
-    m_ColorVec[5] = { 0x67, 0x1F, 0x07 };
-    m_ColorVec[6] = { 0x77, 0x1F, 0x07 };
-    m_ColorVec[7] = { 0x8F, 0x27, 0x07 };
-    m_ColorVec[8] = { 0x9F, 0x2F, 0x07 };
-    m_ColorVec[9] = { 0xAF, 0x3F, 0x07 };
-    m_ColorVec[10] = { 0xBF, 0x47, 0x07 };
-    m_ColorVec[11] = { 0xC7, 0x47, 0x07 };
-    m_ColorVec[12] = { 0xDF, 0x4F, 0x07 };
-    m_ColorVec[13] = { 0xDF, 0x57, 0x07 };
-    m_ColorVec[14] = { 0xDF, 0x57, 0x07 };
-    m_ColorVec[15] = { 0xD7, 0x5F, 0x07 };
-    m_ColorVec[16] = { 0xD7, 0x5F, 0x07 };
-    m_ColorVec[17] = { 0xD7, 0x67, 0x0F };
-    m_ColorVec[18] = { 0xCF, 0x6F, 0x0F };
-    m_ColorVec[19] = { 0xCF, 0x77, 0x0F };
-    m_ColorVec[20] = { 0xCF, 0x7F, 0x0F };
-    m_ColorVec[21] = { 0xCF, 0x87, 0x17 };
-    m_ColorVec[22] = { 0xC7, 0x87, 0x17 };
-    m_ColorVec[23] = { 0xC7, 0x8F, 0x17 };
-    m_ColorVec[24] = { 0xC7, 0x97, 0x1F };
-    m_ColorVec[25] = { 0xBF, 0x9F, 0x1F };
-    m_ColorVec[26] = { 0xBF, 0x9F, 0x1F };
-    m_ColorVec[27] = { 0xBF, 0xA7, 0x27 };
-    m_ColorVec[28] = { 0xBF, 0xA7, 0x27 };
-    m_ColorVec[29] = { 0xBF, 0xAF, 0x2F };
-    m_ColorVec[30] = { 0xB7, 0xAF, 0x2F };
-    m_ColorVec[31] = { 0xB7, 0xB7, 0x2F };
-    m_ColorVec[32] = { 0xB7, 0xB7, 0x37 };
-    m_ColorVec[33] = { 0xCF, 0xCF, 0x6F };
-    m_ColorVec[34] = { 0xDF, 0xDF, 0x9F };
-    m_ColorVec[35] = { 0xEF, 0xEF, 0xC7 };
-    m_ColorVec[36] = { 0xFF, 0xFF, 0xFF };
+    int Index = 0;
+    m_ColorLookup[Index++] = { 0x00, 0x00, 0x00 };
+    m_ColorLookup[Index++] = { 0x07, 0x07, 0x07 };
+    m_ColorLookup[Index++] = { 0x1F, 0x07, 0x07 };
+    m_ColorLookup[Index++] = { 0x2F, 0x0F, 0x07 };
+    m_ColorLookup[Index++] = { 0x47, 0x0F, 0x07 };
+    m_ColorLookup[Index++] = { 0x57, 0x17, 0x07 };
+    m_ColorLookup[Index++] = { 0x67, 0x1F, 0x07 };
+    m_ColorLookup[Index++] = { 0x77, 0x1F, 0x07 };
+    m_ColorLookup[Index++] = { 0x8F, 0x27, 0x07 };
+    m_ColorLookup[Index++] = { 0x9F, 0x2F, 0x07 };
+    m_ColorLookup[Index++] = { 0xAF, 0x3F, 0x07 };
+    m_ColorLookup[Index++] = { 0xBF, 0x47, 0x07 };
+    m_ColorLookup[Index++] = { 0xC7, 0x47, 0x07 };
+    m_ColorLookup[Index++] = { 0xDF, 0x4F, 0x07 };
+    m_ColorLookup[Index++] = { 0xDF, 0x57, 0x07 };
+    m_ColorLookup[Index++] = { 0xDF, 0x57, 0x07 };
+    m_ColorLookup[Index++] = { 0xD7, 0x5F, 0x07 };
+    m_ColorLookup[Index++] = { 0xD7, 0x5F, 0x07 };
+    m_ColorLookup[Index++] = { 0xD7, 0x67, 0x0F };
+    m_ColorLookup[Index++] = { 0xCF, 0x6F, 0x0F };
+    m_ColorLookup[Index++] = { 0xCF, 0x77, 0x0F };
+    m_ColorLookup[Index++] = { 0xCF, 0x7F, 0x0F };
+    m_ColorLookup[Index++] = { 0xCF, 0x87, 0x17 };
+    m_ColorLookup[Index++] = { 0xC7, 0x87, 0x17 };
+    m_ColorLookup[Index++] = { 0xC7, 0x8F, 0x17 };
+    m_ColorLookup[Index++] = { 0xC7, 0x97, 0x1F };
+    m_ColorLookup[Index++] = { 0xBF, 0x9F, 0x1F };
+    m_ColorLookup[Index++] = { 0xBF, 0x9F, 0x1F };
+    m_ColorLookup[Index++] = { 0xBF, 0xA7, 0x27 };
+    m_ColorLookup[Index++] = { 0xBF, 0xA7, 0x27 };
+    m_ColorLookup[Index++] = { 0xBF, 0xAF, 0x2F };
+    m_ColorLookup[Index++] = { 0xB7, 0xAF, 0x2F };
+    m_ColorLookup[Index++] = { 0xB7, 0xB7, 0x2F };
+    m_ColorLookup[Index++] = { 0xB7, 0xB7, 0x37 };
+    m_ColorLookup[Index++] = { 0xCF, 0xCF, 0x6F };
+    m_ColorLookup[Index++] = { 0xDF, 0xDF, 0x9F };
+    m_ColorLookup[Index++] = { 0xEF, 0xEF, 0xC7 };
+    m_ColorLookup[Index++] = { 0xFF, 0xFF, 0xFF };
 }
 
 void FireEffect::Clean()
@@ -102,7 +104,7 @@ void FireEffect::ProcessInput()
 void FireEffect::Render()
 {
     SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 0xff);
-    SDL_RenderClear(m_pRenderer);
+    //SDL_RenderClear(m_pRenderer);
 
     Render(m_pRenderer);
 
@@ -117,7 +119,7 @@ void FireEffect::Update()
         {
             int RandomeNumber = rand() % 3;
 
-            if (0 < m_FrameBuffer[y][x] && m_FrameBuffer[y][x] < m_ColorVec.size())
+            if (0 < m_FrameBuffer[y][x] && m_FrameBuffer[y][x] < m_ColorLookup.size())
             {
                 m_FrameBuffer[y - 1][x] = m_FrameBuffer[y][x] - (RandomeNumber & 1);
                 //if ( -1 < (x - RandomeNumber) && (x - RandomeNumber) < m_iBufferWidth)
@@ -145,7 +147,7 @@ void FireEffect::Render(SDL_Renderer* pRenderer)
         {
             if (m_FrameBuffer[y][x])
             {
-                SDL_SetRenderDrawColor(pRenderer, m_ColorVec[m_FrameBuffer[y][x]].r, m_ColorVec[m_FrameBuffer[y][x]].g, m_ColorVec[m_FrameBuffer[y][x]].b, 0xff);
+                SDL_SetRenderDrawColor(pRenderer, m_ColorLookup[m_FrameBuffer[y][x]].r, m_ColorLookup[m_FrameBuffer[y][x]].g, m_ColorLookup[m_FrameBuffer[y][x]].b, 0xff);
                 SDL_RenderDrawPoint(pRenderer, x, y);
             }
         }

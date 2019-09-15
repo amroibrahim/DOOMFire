@@ -28,7 +28,7 @@ protected:
     virtual void InitColorVec();
 
     std::array<std::array<int, iWidth>, iHeight> m_FrameBuffer;
-    std::array<SDL_Color, 37> m_ColorVec;
+    std::array<SDL_Color, 38> m_ColorLookup;
 
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
