@@ -19,12 +19,14 @@ FireEffect::FireEffect()
         m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
     }
 
+    m_pTexture = SDL_CreateTexture (m_pRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_iBufferWidth, m_iBufferHight);
+
     InitColorLookup();
 
-    m_pFrameBuffer = new int* [m_iBufferHight];
+    m_pFrameBuffer = new uint8_t* [m_iBufferHight];
     for (int y = 0; y < m_iBufferHight; y++)
     {
-        m_pFrameBuffer[y] = new int[m_iBufferWidth];
+        m_pFrameBuffer[y] = new uint8_t[m_iBufferWidth];
     }
 
     for (int x = 0; x < m_iBufferWidth; x++)
@@ -159,17 +161,26 @@ void FireEffect::Delay()
 
 void FireEffect::Render(SDL_Renderer* pRenderer)
 {
+    int Pitch;
+    uint8_t *Pixels;
+    uint32_t PixelPosition;
+    SDL_LockTexture(m_pTexture, NULL, (void **)&Pixels, &Pitch);
+    
     for (int y = 0; y < m_iBufferHight; ++y)
     {
         for (int x = 0; x < m_iBufferWidth; ++x)
         {
-            //if (m_pFrameBuffer[y][x])
-            //{
-                SDL_SetRenderDrawColor(pRenderer, m_pColorLookup[m_pFrameBuffer[y][x]].r, m_pColorLookup[m_pFrameBuffer[y][x]].g, m_pColorLookup[m_pFrameBuffer[y][x]].b, 0xff);
-                SDL_RenderDrawPoint(pRenderer, x, y);
-            //}
+            PixelPosition = (y * (Pitch / sizeof(uint32_t)) + x) * sizeof(uint32_t);
+
+            Pixels[PixelPosition++] = m_pColorLookup[m_pFrameBuffer[y][x]].b;
+            Pixels[PixelPosition++] = m_pColorLookup[m_pFrameBuffer[y][x]].g; 
+            Pixels[PixelPosition++] = m_pColorLookup[m_pFrameBuffer[y][x]].r; 
+            Pixels[PixelPosition] = 0xff;
         }
     }
+
+    SDL_UnlockTexture(m_pTexture);
+    SDL_RenderCopy(pRenderer, m_pTexture, nullptr, nullptr);
 }
 
 void  FireEffect::Quit()

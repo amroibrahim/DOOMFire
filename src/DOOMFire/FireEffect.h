@@ -28,11 +28,12 @@ protected:
     virtual void Render(SDL_Renderer* pRenderer);
     virtual void InitColorLookup();
 
-    int **m_pFrameBuffer;
+    uint8_t **m_pFrameBuffer;
     SDL_Color* m_pColorLookup;
 
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
+    SDL_Texture* m_pTexture;
 
     int m_iBufferWidth;
     int m_iBufferHight;

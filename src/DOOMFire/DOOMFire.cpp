@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
         pfireEffect->ProcessInput();
         pfireEffect->Update();
         pfireEffect->Render();
-        pfireEffect->Delay();
+        //pfireEffect->Delay();
     }
 
     pfireEffect->Clean();
