@@ -29,11 +29,14 @@ protected:
     virtual void InitColorLookup();
 
     uint8_t **m_pFrameBuffer;
-    SDL_Color* m_pColorLookup;
+    SDL_Color* m_pPalette;
 
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
     SDL_Texture* m_pTexture;
+
+    SDL_Surface *m_pScreenBuffer;
+    SDL_Surface *m_pRGBBuffer;
 
     int m_iBufferWidth;
     int m_iBufferHight;

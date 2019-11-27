@@ -3,6 +3,12 @@
 
 FireEffect::FireEffect()
 {
+    int bpp;
+    uint32_t Rmask;
+    uint32_t Gmask;
+    uint32_t Bmask;
+    uint32_t Amask;
+
     //Initialize SDL
     m_iBufferWidth = iWidth;
     m_iBufferHight = iHeight;
@@ -18,6 +24,16 @@ FireEffect::FireEffect()
     {
         m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
     }
+
+    uint32_t PixelFormat = SDL_GetWindowPixelFormat(m_pWindow);
+
+    // Create 8-bit screen buffer
+    m_pScreenBuffer = SDL_CreateRGBSurface(0, m_iBufferWidth, m_iBufferHight, 8, 0, 0, 0, 0);
+    SDL_FillRect(m_pScreenBuffer, NULL, 0);
+
+    SDL_PixelFormatEnumToMasks(PixelFormat, &bpp, &Rmask, &Gmask, &Bmask, &Amask);
+    m_pRGBBuffer = SDL_CreateRGBSurface(0, m_iBufferWidth, m_iBufferHight, 32, Rmask, Gmask, Bmask, Amask);
+    SDL_FillRect(m_pRGBBuffer, NULL, 0);
 
     m_pTexture = SDL_CreateTexture (m_pRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_iBufferWidth, m_iBufferHight);
 
@@ -37,7 +53,6 @@ FireEffect::FireEffect()
         }
     }
 
-
     for (int i = 0; i < m_iBufferWidth; ++i)
     {
         m_pFrameBuffer[m_iBufferHight - 1][i] = iColorCount - 1;
@@ -47,51 +62,54 @@ FireEffect::FireEffect()
 void FireEffect::InitColorLookup()
 {
     int Index = 0;
-    m_pColorLookup = new SDL_Color[iColorCount];
+    m_pPalette = new SDL_Color[iColorCount];
 
-    m_pColorLookup[Index++] = { 0x00, 0x00, 0x00 };
-    m_pColorLookup[Index++] = { 0x00, 0x00, 0x00 };
-    m_pColorLookup[Index++] = { 0x07, 0x07, 0x07 };
-    m_pColorLookup[Index++] = { 0x1F, 0x07, 0x07 };
-    m_pColorLookup[Index++] = { 0x2F, 0x0F, 0x07 };
-    m_pColorLookup[Index++] = { 0x47, 0x0F, 0x07 };
-    m_pColorLookup[Index++] = { 0x57, 0x17, 0x07 };
-    m_pColorLookup[Index++] = { 0x67, 0x1F, 0x07 };
-    m_pColorLookup[Index++] = { 0x77, 0x1F, 0x07 };
-    m_pColorLookup[Index++] = { 0x8F, 0x27, 0x07 };
-    m_pColorLookup[Index++] = { 0x9F, 0x2F, 0x07 };
-    m_pColorLookup[Index++] = { 0xAF, 0x3F, 0x07 };
-    m_pColorLookup[Index++] = { 0xBF, 0x47, 0x07 };
-    m_pColorLookup[Index++] = { 0xC7, 0x47, 0x07 };
-    m_pColorLookup[Index++] = { 0xDF, 0x4F, 0x07 };
-    m_pColorLookup[Index++] = { 0xDF, 0x57, 0x07 };
-    m_pColorLookup[Index++] = { 0xDF, 0x57, 0x07 };
-    m_pColorLookup[Index++] = { 0xD7, 0x5F, 0x07 };
-    m_pColorLookup[Index++] = { 0xD7, 0x5F, 0x07 };
-    m_pColorLookup[Index++] = { 0xD7, 0x67, 0x0F };
-    m_pColorLookup[Index++] = { 0xCF, 0x6F, 0x0F };
-    m_pColorLookup[Index++] = { 0xCF, 0x77, 0x0F };
-    m_pColorLookup[Index++] = { 0xCF, 0x7F, 0x0F };
-    m_pColorLookup[Index++] = { 0xCF, 0x87, 0x17 };
-    m_pColorLookup[Index++] = { 0xC7, 0x87, 0x17 };
-    m_pColorLookup[Index++] = { 0xC7, 0x8F, 0x17 };
-    m_pColorLookup[Index++] = { 0xC7, 0x97, 0x1F };
-    m_pColorLookup[Index++] = { 0xBF, 0x9F, 0x1F };
-    m_pColorLookup[Index++] = { 0xBF, 0x9F, 0x1F };
-    m_pColorLookup[Index++] = { 0xBF, 0xA7, 0x27 };
-    m_pColorLookup[Index++] = { 0xBF, 0xA7, 0x27 };
-    m_pColorLookup[Index++] = { 0xBF, 0xAF, 0x2F };
-    m_pColorLookup[Index++] = { 0xB7, 0xAF, 0x2F };
-    m_pColorLookup[Index++] = { 0xB7, 0xB7, 0x2F };
-    m_pColorLookup[Index++] = { 0xB7, 0xB7, 0x37 };
-    m_pColorLookup[Index++] = { 0xCF, 0xCF, 0x6F };
-    m_pColorLookup[Index++] = { 0xDF, 0xDF, 0x9F };
-    m_pColorLookup[Index++] = { 0xEF, 0xEF, 0xC7 };
-    m_pColorLookup[Index++] = { 0xFF, 0xFF, 0xFF };
+    m_pPalette[Index++] = { 0x00, 0x00, 0x00 };
+    m_pPalette[Index++] = { 0x00, 0x00, 0x00 };
+    m_pPalette[Index++] = { 0x07, 0x07, 0x07 };
+    m_pPalette[Index++] = { 0x1F, 0x07, 0x07 };
+    m_pPalette[Index++] = { 0x2F, 0x0F, 0x07 };
+    m_pPalette[Index++] = { 0x47, 0x0F, 0x07 };
+    m_pPalette[Index++] = { 0x57, 0x17, 0x07 };
+    m_pPalette[Index++] = { 0x67, 0x1F, 0x07 };
+    m_pPalette[Index++] = { 0x77, 0x1F, 0x07 };
+    m_pPalette[Index++] = { 0x8F, 0x27, 0x07 };
+    m_pPalette[Index++] = { 0x9F, 0x2F, 0x07 };
+    m_pPalette[Index++] = { 0xAF, 0x3F, 0x07 };
+    m_pPalette[Index++] = { 0xBF, 0x47, 0x07 };
+    m_pPalette[Index++] = { 0xC7, 0x47, 0x07 };
+    m_pPalette[Index++] = { 0xDF, 0x4F, 0x07 };
+    m_pPalette[Index++] = { 0xDF, 0x57, 0x07 };
+    m_pPalette[Index++] = { 0xDF, 0x57, 0x07 };
+    m_pPalette[Index++] = { 0xD7, 0x5F, 0x07 };
+    m_pPalette[Index++] = { 0xD7, 0x5F, 0x07 };
+    m_pPalette[Index++] = { 0xD7, 0x67, 0x0F };
+    m_pPalette[Index++] = { 0xCF, 0x6F, 0x0F };
+    m_pPalette[Index++] = { 0xCF, 0x77, 0x0F };
+    m_pPalette[Index++] = { 0xCF, 0x7F, 0x0F };
+    m_pPalette[Index++] = { 0xCF, 0x87, 0x17 };
+    m_pPalette[Index++] = { 0xC7, 0x87, 0x17 };
+    m_pPalette[Index++] = { 0xC7, 0x8F, 0x17 };
+    m_pPalette[Index++] = { 0xC7, 0x97, 0x1F };
+    m_pPalette[Index++] = { 0xBF, 0x9F, 0x1F };
+    m_pPalette[Index++] = { 0xBF, 0x9F, 0x1F };
+    m_pPalette[Index++] = { 0xBF, 0xA7, 0x27 };
+    m_pPalette[Index++] = { 0xBF, 0xA7, 0x27 };
+    m_pPalette[Index++] = { 0xBF, 0xAF, 0x2F };
+    m_pPalette[Index++] = { 0xB7, 0xAF, 0x2F };
+    m_pPalette[Index++] = { 0xB7, 0xB7, 0x2F };
+    m_pPalette[Index++] = { 0xB7, 0xB7, 0x37 };
+    m_pPalette[Index++] = { 0xCF, 0xCF, 0x6F };
+    m_pPalette[Index++] = { 0xDF, 0xDF, 0x9F };
+    m_pPalette[Index++] = { 0xEF, 0xEF, 0xC7 };
+    m_pPalette[Index++] = { 0xFF, 0xFF, 0xFF };
 }
 
 void FireEffect::Clean()
 {
+    SDL_FreeSurface(m_pScreenBuffer);
+    SDL_FreeSurface(m_pRGBBuffer);
+
     SDL_DestroyRenderer(m_pRenderer);
     SDL_DestroyWindow(m_pWindow);
     SDL_Quit();
@@ -99,8 +117,13 @@ void FireEffect::Clean()
 
 FireEffect::~FireEffect()
 {
+    m_pScreenBuffer = nullptr;
+    m_pRGBBuffer = nullptr;
     m_pRenderer = nullptr;
     m_pWindow = nullptr;
+    
+    
+    
 }
 
 void FireEffect::ProcessInput()
@@ -172,9 +195,9 @@ void FireEffect::Render(SDL_Renderer* pRenderer)
         {
             PixelPosition = (y * (Pitch / sizeof(uint32_t)) + x) * sizeof(uint32_t);
 
-            Pixels[PixelPosition++] = m_pColorLookup[m_pFrameBuffer[y][x]].b;
-            Pixels[PixelPosition++] = m_pColorLookup[m_pFrameBuffer[y][x]].g; 
-            Pixels[PixelPosition++] = m_pColorLookup[m_pFrameBuffer[y][x]].r; 
+            Pixels[PixelPosition++] = m_pPalette[m_pFrameBuffer[y][x]].b;
+            Pixels[PixelPosition++] = m_pPalette[m_pFrameBuffer[y][x]].g; 
+            Pixels[PixelPosition++] = m_pPalette[m_pFrameBuffer[y][x]].r; 
             Pixels[PixelPosition] = 0xff;
         }
     }
