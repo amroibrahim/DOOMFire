@@ -3,8 +3,8 @@
 #include <array>
 #include <SDL.h>
 
-#define iWidth 320 * 2
-#define iHeight 200 * 2
+#define iWidth 640   //320  //1920  // 3840
+#define iHeight 400  //200  //1080  // 2160
 #define iColorCount 39
 #define iTimePerFrame 1000/60 
 
