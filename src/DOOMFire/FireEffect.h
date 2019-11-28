@@ -25,10 +25,8 @@ public:
     int GetTimePerFrame();
 
 protected:
-    virtual void Render(SDL_Renderer* pRenderer);
     virtual void InitColorLookup();
 
-    uint8_t **m_pFrameBuffer;
     SDL_Color* m_pPalette;
 
     SDL_Window* m_pWindow;
@@ -38,7 +36,8 @@ protected:
     SDL_Surface *m_pScreenBuffer;
     SDL_Surface *m_pRGBBuffer;
 
-    int m_iBufferWidth;
-    int m_iBufferHight;
+    int m_iScreenWidth;
+    int m_iScreenHeight;
+    int m_iPaletteColorCount;
     bool m_bIsOver;
 };

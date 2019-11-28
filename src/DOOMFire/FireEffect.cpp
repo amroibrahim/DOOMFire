@@ -10,15 +10,15 @@ FireEffect::FireEffect()
     uint32_t Amask;
 
     //Initialize SDL
-    m_iBufferWidth = iWidth;
-    m_iBufferHight = iHeight;
+    m_iScreenWidth = iWidth;
+    m_iScreenHeight = iHeight;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         std::cout << "SDL failed to initialize! SDL_Error: " << SDL_GetError() << std::endl;
     }
 
-    m_pWindow = SDL_CreateWindow("DOOM Fire Effect", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_iBufferWidth, m_iBufferHight, SDL_WINDOW_SHOWN);
+    m_pWindow = SDL_CreateWindow("DOOM Fire Effect", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_iScreenWidth, m_iScreenHeight, SDL_WINDOW_SHOWN);
 
     if (m_pWindow)
     {
@@ -28,34 +28,24 @@ FireEffect::FireEffect()
     uint32_t PixelFormat = SDL_GetWindowPixelFormat(m_pWindow);
 
     // Create 8-bit screen buffer
-    m_pScreenBuffer = SDL_CreateRGBSurface(0, m_iBufferWidth, m_iBufferHight, 8, 0, 0, 0, 0);
+    m_pScreenBuffer = SDL_CreateRGBSurface(0, m_iScreenWidth, m_iScreenHeight, 8, 0, 0, 0, 0);
     SDL_FillRect(m_pScreenBuffer, NULL, 0);
 
     SDL_PixelFormatEnumToMasks(PixelFormat, &bpp, &Rmask, &Gmask, &Bmask, &Amask);
-    m_pRGBBuffer = SDL_CreateRGBSurface(0, m_iBufferWidth, m_iBufferHight, 32, Rmask, Gmask, Bmask, Amask);
+    m_pRGBBuffer = SDL_CreateRGBSurface(0, m_iScreenWidth, m_iScreenHeight, 32, Rmask, Gmask, Bmask, Amask);
     SDL_FillRect(m_pRGBBuffer, NULL, 0);
 
-    m_pTexture = SDL_CreateTexture (m_pRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_iBufferWidth, m_iBufferHight);
+    m_pTexture = SDL_CreateTexture (m_pRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_iScreenWidth, m_iScreenHeight);
 
     InitColorLookup();
 
-    m_pFrameBuffer = new uint8_t* [m_iBufferHight];
-    for (int y = 0; y < m_iBufferHight; y++)
-    {
-        m_pFrameBuffer[y] = new uint8_t[m_iBufferWidth];
-    }
+    SDL_SetPaletteColors(m_pScreenBuffer->format->palette, m_pPalette, 0, iColorCount);
 
-    for (int x = 0; x < m_iBufferWidth; x++)
-    {
-        for (int y = 0; y < m_iBufferHight; y++)
-        {
-            m_pFrameBuffer[y][x] = 0;
-        }
-    }
+    uint8_t *pPixels = (uint8_t *)m_pScreenBuffer->pixels;
 
-    for (int i = 0; i < m_iBufferWidth; ++i)
+    for (int x = 0; x < m_iScreenWidth; ++x)
     {
-        m_pFrameBuffer[m_iBufferHight - 1][i] = iColorCount - 1;
+        pPixels[m_iScreenWidth * (m_iScreenHeight - 1) + x] = iColorCount - 1;
     }
 }
 
@@ -108,22 +98,25 @@ void FireEffect::InitColorLookup()
 void FireEffect::Clean()
 {
     SDL_FreeSurface(m_pScreenBuffer);
+    m_pScreenBuffer = nullptr;
+
     SDL_FreeSurface(m_pRGBBuffer);
+    m_pRGBBuffer = nullptr;
+
+    SDL_DestroyTexture(m_pTexture);
+    m_pTexture = nullptr;
 
     SDL_DestroyRenderer(m_pRenderer);
+    m_pRenderer = nullptr;
+
     SDL_DestroyWindow(m_pWindow);
+    m_pWindow = nullptr;
+
     SDL_Quit();
 }
 
 FireEffect::~FireEffect()
 {
-    m_pScreenBuffer = nullptr;
-    m_pRGBBuffer = nullptr;
-    m_pRenderer = nullptr;
-    m_pWindow = nullptr;
-    
-    
-    
 }
 
 void FireEffect::ProcessInput()
@@ -143,30 +136,19 @@ void FireEffect::ProcessInput()
     }
 }
 
-void FireEffect::Render()
-{
-    SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 0xff);
-    SDL_RenderClear(m_pRenderer);
-
-    Render(m_pRenderer);
-
-    SDL_RenderPresent(m_pRenderer);
-}
-
 void FireEffect::Update()
 {
     int RandomeNumber = 0;
-
-    for (int y = 1; y < m_iBufferHight; ++y)
+    
+    uint8_t *pPixels = (uint8_t *)m_pScreenBuffer->pixels;
+    for (int y = 1; y < m_iScreenHeight; ++y)
     {
-        for (int x = 0; x < m_iBufferWidth; ++x)
+        for (int x = 0; x < m_iScreenWidth; ++x)
         {
-            if (0 < m_pFrameBuffer[y][x] && m_pFrameBuffer[y][x] <= iColorCount)
+            if (0 < pPixels[m_iScreenWidth * y + x] && pPixels[m_iScreenWidth * y + x] < iColorCount)
             {
                 RandomeNumber = rand() % 3;
-                m_pFrameBuffer[y - 1][x] = m_pFrameBuffer[y][x] - (RandomeNumber & 1);
-                //if ( -1 < (x - RandomeNumber) && (x - RandomeNumber) < m_iBufferWidth)
-                //    m_FrameBuffer[y - 1][x - RandomeNumber] = m_FrameBuffer[y][x] - (RandomeNumber & 1);
+                pPixels[m_iScreenWidth * (y-1) + x] = pPixels[m_iScreenWidth * y + x] - (RandomeNumber & 1);
             }
         }
     }
@@ -182,28 +164,12 @@ void FireEffect::Delay()
     SDL_Delay(GetTimePerFrame());
 }
 
-void FireEffect::Render(SDL_Renderer* pRenderer)
+void FireEffect::Render()
 {
-    int Pitch;
-    uint8_t *Pixels;
-    uint32_t PixelPosition;
-    SDL_LockTexture(m_pTexture, NULL, (void **)&Pixels, &Pitch);
-    
-    for (int y = 0; y < m_iBufferHight; ++y)
-    {
-        for (int x = 0; x < m_iBufferWidth; ++x)
-        {
-            PixelPosition = (y * (Pitch / sizeof(uint32_t)) + x) * sizeof(uint32_t);
-
-            Pixels[PixelPosition++] = m_pPalette[m_pFrameBuffer[y][x]].b;
-            Pixels[PixelPosition++] = m_pPalette[m_pFrameBuffer[y][x]].g; 
-            Pixels[PixelPosition++] = m_pPalette[m_pFrameBuffer[y][x]].r; 
-            Pixels[PixelPosition] = 0xff;
-        }
-    }
-
-    SDL_UnlockTexture(m_pTexture);
-    SDL_RenderCopy(pRenderer, m_pTexture, nullptr, nullptr);
+    SDL_BlitSurface(m_pScreenBuffer, nullptr, m_pRGBBuffer, nullptr);
+    SDL_UpdateTexture(m_pTexture, nullptr, m_pRGBBuffer->pixels, m_pRGBBuffer->pitch);
+    SDL_RenderCopy(m_pRenderer, m_pTexture, nullptr, nullptr);
+    SDL_RenderPresent(m_pRenderer);
 }
 
 void  FireEffect::Quit()
