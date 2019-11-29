@@ -12,6 +12,7 @@ class FireEffect
 {
 public:
     FireEffect();
+    void InitScreenBuffer();
     virtual ~FireEffect();
 
     void ProcessInput();

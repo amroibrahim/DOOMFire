@@ -41,6 +41,11 @@ FireEffect::FireEffect()
 
     SDL_SetPaletteColors(m_pScreenBuffer->format->palette, m_pPalette, 0, iColorCount);
 
+    InitScreenBuffer();
+}
+
+void FireEffect::InitScreenBuffer()
+{
     uint8_t *pPixels = (uint8_t *)m_pScreenBuffer->pixels;
 
     for (int x = 0; x < m_iScreenWidth; ++x)
