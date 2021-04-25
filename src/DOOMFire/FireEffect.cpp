@@ -3,12 +3,6 @@
 
 FireEffect::FireEffect()
 {
-    int bpp;
-    uint32_t Rmask;
-    uint32_t Gmask;
-    uint32_t Bmask;
-    uint32_t Amask;
-
     //Initialize SDL
     m_iScreenWidth = iWidth;
     m_iScreenHeight = iHeight;
