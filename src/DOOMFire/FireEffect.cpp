@@ -22,22 +22,14 @@ FireEffect::FireEffect()
 
     if (m_pWindow)
     {
-        m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
+       m_pWindowSurface = SDL_GetWindowSurface(m_pWindow);
     }
-
-    uint32_t PixelFormat = SDL_GetWindowPixelFormat(m_pWindow);
 
     // Create 8-bit screen buffer
     m_pScreenBuffer = SDL_CreateRGBSurface(0, m_iScreenWidth, m_iScreenHeight, 8, 0, 0, 0, 0);
     SDL_FillRect(m_pScreenBuffer, NULL, 0);
 
-    SDL_PixelFormatEnumToMasks(PixelFormat, &bpp, &Rmask, &Gmask, &Bmask, &Amask);
-    m_pRGBBuffer = SDL_CreateRGBSurface(0, m_iScreenWidth, m_iScreenHeight, 32, Rmask, Gmask, Bmask, Amask);
-    SDL_FillRect(m_pRGBBuffer, NULL, 0);
-
-    m_pTexture = SDL_CreateTexture (m_pRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_iScreenWidth, m_iScreenHeight);
-
-    InitColorLookup();
+    InitColorPalette();
 
     SDL_SetPaletteColors(m_pScreenBuffer->format->palette, m_pPalette, 0, iColorCount);
 
@@ -54,7 +46,7 @@ void FireEffect::InitScreenBuffer()
     }
 }
 
-void FireEffect::InitColorLookup()
+void FireEffect::InitColorPalette()
 {
     int Index = 0;
     m_pPalette = new SDL_Color[iColorCount];
@@ -105,14 +97,8 @@ void FireEffect::Clean()
     SDL_FreeSurface(m_pScreenBuffer);
     m_pScreenBuffer = nullptr;
 
-    SDL_FreeSurface(m_pRGBBuffer);
-    m_pRGBBuffer = nullptr;
-
-    SDL_DestroyTexture(m_pTexture);
-    m_pTexture = nullptr;
-
-    SDL_DestroyRenderer(m_pRenderer);
-    m_pRenderer = nullptr;
+    SDL_FreeSurface(m_pWindowSurface);
+    m_pWindowSurface = nullptr;
 
     SDL_DestroyWindow(m_pWindow);
     m_pWindow = nullptr;
@@ -171,10 +157,8 @@ void FireEffect::Delay()
 
 void FireEffect::Render()
 {
-    SDL_BlitSurface(m_pScreenBuffer, nullptr, m_pRGBBuffer, nullptr);
-    SDL_UpdateTexture(m_pTexture, nullptr, m_pRGBBuffer->pixels, m_pRGBBuffer->pitch);
-    SDL_RenderCopy(m_pRenderer, m_pTexture, nullptr, nullptr);
-    SDL_RenderPresent(m_pRenderer);
+    SDL_BlitSurface(m_pScreenBuffer, nullptr, m_pWindowSurface, nullptr);
+    SDL_UpdateWindowSurface(m_pWindow);
 }
 
 void  FireEffect::Quit()

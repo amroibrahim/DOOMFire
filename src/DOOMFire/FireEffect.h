@@ -26,16 +26,14 @@ public:
     int GetTimePerFrame();
 
 protected:
-    virtual void InitColorLookup();
+    virtual void InitColorPalette();
 
     SDL_Color* m_pPalette;
 
     SDL_Window* m_pWindow;
-    SDL_Renderer* m_pRenderer;
-    SDL_Texture* m_pTexture;
 
+    SDL_Surface *m_pWindowSurface;
     SDL_Surface *m_pScreenBuffer;
-    SDL_Surface *m_pRGBBuffer;
 
     int m_iScreenWidth;
     int m_iScreenHeight;
